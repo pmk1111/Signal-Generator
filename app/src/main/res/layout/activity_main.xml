@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 네모 박스 추가 -->
+    <FrameLayout
+        android:id="@+id/rectangle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#00B8A9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textViewSignalGenerator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Signal Generator"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </FrameLayout>
+
+    <!-- 라디오 버튼 그룹 -->
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rectangle">
+
+        <!-- 라디오 버튼 1 -->
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioButton1"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="sine"
+            android:checked="true"
+            android:button="@null"
+            android:onClick="signalSelect"
+            android:background="@color/unselectedColor" />
+
+        <!-- 라디오 버튼 2 -->
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioButton2"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="square"
+            android:button="@null"
+            android:onClick="signalSelect"
+            android:background="@color/unselectedColor" />
+
+        <!-- 라디오 버튼 3 -->
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioButton3"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="triangle"
+            android:button="@null"
+            android:onClick="signalSelect"
+            android:background="@color/unselectedColor" />
+
+
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
