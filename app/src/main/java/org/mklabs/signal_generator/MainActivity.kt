@@ -4,11 +4,14 @@ import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.content.ContextCompat
@@ -21,12 +24,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var generateButton: Button
     private lateinit var stopButton: Button
 
+    private lateinit var frequencyVal: EditText
+    private lateinit var applyButton: Button
+
     private lateinit var audioTrack: AudioTrack
     private val audioTrackLock = Any()
 
 
     private val sampleRate = 44100
-    private val duration = 5 // 재생할 시간 (초)
+    private val duration = 60 // 재생할 시간
     private val numSamples = sampleRate * duration
     private val bufferSizeInBytes = 2 * AudioTrack.getMinBufferSize(
         sampleRate,
@@ -34,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         AudioFormat.ENCODING_PCM_16BIT
     ) // 2배로 설정
     private lateinit var buffer: ShortArray
-
     private var isPlaying = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +55,11 @@ class MainActivity : AppCompatActivity() {
         frequencySeekBar = findViewById(R.id.frequencySeekBar)
         frequencyTextView = findViewById(R.id.frequencyTextView)
 
+        // 주파수 직접 입력 후 적용
+        frequencyVal = findViewById(R.id.frequencyVal)
+        applyButton = findViewById(R.id.applyFrequencyButton)
+
+        // 주파수 출력, 중지 버튼
         generateButton = findViewById(R.id.generateButton)
         stopButton = findViewById(R.id.stopButton)
 
@@ -58,14 +68,8 @@ class MainActivity : AppCompatActivity() {
                 val frequency = progress
                 frequencyTextView.text = "$frequency Hz"
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                // Not needed in this example
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // Not needed in this example
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
     }
 
@@ -93,6 +97,33 @@ class MainActivity : AppCompatActivity() {
         println("선택한 버튼: $selectedSignal")
     }
 
+    // applyFrequencyButton의 클릭 이벤트 처리
+    fun applyFrequency(view: View) {
+        // SeekBar의 현재 값 가져오기
+        val selectedFrequency: Int = frequencySeekBar.progress
+        val frequencyValString: String = frequencyVal.text.toString()
+
+        // 값이 비어있지 않은 경우에만 처리
+        if (!TextUtils.isEmpty(frequencyValString)) {
+            try {
+                val frequencyVal: Int = frequencyValString.toInt()
+
+                // 주파수 범위 검사 (20에서 20000 사이)
+                if (frequencyVal in 20..20000) {
+                    frequencyTextView.text = "$frequencyVal Hz"
+                    frequencySeekBar.progress = frequencyVal
+                } else {
+                    // 범위를 벗어난 경우 처리
+                    Toast.makeText(this, "please right between 20hz~20khz", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: NumberFormatException) {
+                // 숫자로 변환할 수 없는 경우 처리
+                Toast.makeText(this, "please right number between 20hz~20khz", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
     private fun updateButtonTextColor(button: AppCompatRadioButton, isSelected: Boolean) {
         val textColorResId = if (isSelected) R.color.white else R.color.black
         button.setTextColor(ContextCompat.getColorStateList(this, textColorResId))
@@ -112,11 +143,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generateSineWave(frequency: Int) {
-        buffer = ShortArray(numSamples)  // 기존 buffer 배열을 사용
+        buffer = ShortArray(numSamples)
         for (i in 0 until numSamples) {
-            buffer[i] =
-                (Short.MAX_VALUE * Math.sin(2.0 * Math.PI * i / (sampleRate / frequency))).toInt()
-                    .toShort()
+            buffer[i] = (Short.MAX_VALUE * Math.sin(2.0 * Math.PI * i / (sampleRate / frequency))).toInt().toShort()
         }
         println("SineWave 송출")
     }
@@ -145,7 +174,6 @@ class MainActivity : AppCompatActivity() {
         }
         println("TriangleWave 송출")
     }
-
 
     private fun playSound() {
         // AudioTrack 초기화
