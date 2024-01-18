@@ -7,15 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <!-- 네모 박스 추가 -->
     <FrameLayout
         android:id="@+id/rectangle"
@@ -60,7 +51,8 @@
             android:checked="true"
             android:button="@null"
             android:onClick="signalSelect"
-            android:background="@color/unselectedColor" />
+            android:background="@color/unselectedColor"
+            android:textColor="@color/white"/>
 
         <!-- 라디오 버튼 2 -->
         <androidx.appcompat.widget.AppCompatRadioButton
@@ -86,7 +78,66 @@
             android:onClick="signalSelect"
             android:background="@color/unselectedColor" />
 
-
     </RadioGroup>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <!-- 주파수 표시 텍스트 -->
+        <TextView
+            android:id="@+id/frequencyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/frequencySeekBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:text="4000 Hz"
+            android:textSize="16dp" />
+
+        <!-- seekbar -->
+        <SeekBar
+            android:id="@+id/frequencySeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:max="20000"
+            android:min="20"
+            android:progress="4000"
+            android:thumb="@drawable/seekbar_thumb"
+            android:progressDrawable="@drawable/seekbar"
+            />
+
+        <!-- Generate 버튼 -->
+        <Button
+            android:id="@+id/generateButton"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="Generate"
+            android:layout_below="@id/frequencySeekBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#00B8A9"
+            android:onClick="onGenerateButtonClick"
+            />
+
+        <Button
+            android:id="@+id/stopButton"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="Stop"
+            android:layout_below="@id/frequencySeekBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#FF0000"
+            android:onClick="stopGenerateSound"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
